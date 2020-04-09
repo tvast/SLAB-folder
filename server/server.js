@@ -18,20 +18,15 @@ let allowCrossDomain = function (req, res, next) {
 }
 app.use(allowCrossDomain);
 
-let db = new sqlite3.Database('slab.db', sqlite3.OPEN_READWRITE, (err) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log('Connected to the ocs database.');
-});
 
-exporter = sqliteJson(db);
 
-exporter.tables(function (err, tables) {
+// exporter = sqliteJson(db);
 
-  console.log(tables)
-  // tables === ['foo', 'bar', 'baz']
-});
+// exporter.tables(function (err, tables) {
+
+//   console.log(tables)
+//   // tables === ['foo', 'bar', 'baz']
+// });
 
 
 
@@ -129,9 +124,15 @@ app.get(`/result`, async (req, res) => {
   });
 
 });
-app.get("/addArticle", async function (req, res) {
+app.post("/addArticle", async function (req, res) {
   console.log(req.body.title);
   var foo = req.body
+  let db = new sqlite3.Database('slab.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log('Connected to the ocs database.');
+  });
   db.serialize(function () {
 
     var stmt = db.prepare("INSERT INTO main (title,content) VALUES (" + JSON.stringify(req.body.title) + "," + JSON.stringify(req.body.content) + ")");
