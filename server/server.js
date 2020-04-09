@@ -111,8 +111,23 @@ app.get(`/photo`, async (req, res) => {
 
 });
 
-app.get(`/result`, async (req, res) => {
-  exporter.json('select * FROM AthleteResult', async function (err, json) {
+app.get(`/getDatasql`, async (req, res) => {
+  let db = new sqlite3.Database('slab.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+      console.error(err.message);
+    }
+    console.log('Connected to the ocs database.');
+  });
+
+  exporter = sqliteJson(db);
+
+  exporter.tables(function (err, tables) {
+
+    console.log(tables)
+    // tables === ['foo', 'bar', 'baz']
+  });
+
+  exporter.json('select * FROM Main', async function (err, json) {
     // handle error or do something with the JSON
     // "[{"foo": 1}, {"foo": 2}, {"foo": 3}]"
     try {
@@ -120,7 +135,7 @@ app.get(`/result`, async (req, res) => {
     } catch (err) {
       await res.json(err);
     }
-    // console.log(JSON.stringify(json))
+    console.log(JSON.stringify(json))
   });
 
 });

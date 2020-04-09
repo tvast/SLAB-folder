@@ -15,7 +15,7 @@
           />
           <q-input
             outlined
-            v-model="article.text"
+            v-model="article.content"
             filled
             type="textarea"
           />
@@ -50,16 +50,35 @@ export default {
     return {
       article: {
         title: 'hello title',
-        text: '# h1 Heading 8-) '
+        content: '# h1 Heading 8-) '
       }
     }
   },
   methods: {
+
+    async postData (inputData) {
+      const response = await fetch('http://localhost:2800/addArticle', {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        // method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *client
+        body: JSON.stringify(inputData) // body data type must match "Content-Type" header
+      })
+      return await response.json() // parses JSON response into native JavaScript objects
+    },
     postarticle () {
       var f = this.article
-      this.$store.commit('change', f)
-      this.$router.push({ path: '/result' })
-      console.log(f)
+      // this.$store.commit('change', f)
+      this.postData(f)
+      this.$router.push({ path: '/list' })
+      // console.log(f)
     }
   }
 }
