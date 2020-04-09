@@ -1,0 +1,15 @@
+sound like a boss
+
+create article in md
+	view with md editor
+		content
+		tag
+		sound
+		link
+		image
+	store as md in sqlite databasse
+
+list aticle
+
+	view list
+	filter
